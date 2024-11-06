@@ -36,6 +36,7 @@
     "block.storagedrawers.keybutton_quantify": "測量キーボタン",
     "block.storagedrawers.keybutton_concealment": "秘匿キーボタン",
     "block.storagedrawers.keybutton_personal": "個人キーボタン",
+    "block.storagedrawers.framing_table": "枠取り台",
 
     "config.jade.plugin_storagedrawers.main": "Storage Drawers",
     "config.jade.plugin_storagedrawers.display.content": "スロット内容",

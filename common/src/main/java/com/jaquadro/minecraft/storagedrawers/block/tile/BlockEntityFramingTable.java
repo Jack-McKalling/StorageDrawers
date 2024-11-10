@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockEntityFramingTable extends BaseBlockEntity implements Container, MenuProvider
+public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProvider
 {
     public static final int SLOT_INPUT = 0;
     public static final int SLOT_SIDE = 1;
@@ -34,6 +34,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
     public static final int SLOT_FRONT = 3;
     public static final int SLOT_RESULT = 4;
 
+    private final BlockInventory inventory;
     private final MaterialData materialData = new MaterialData();
     protected ItemStack inputStack = ItemStack.EMPTY;
     protected ItemStack resultStack = ItemStack.EMPTY;
@@ -42,6 +43,7 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         super(blockEntityType, pos, state);
 
         injectData(materialData);
+        inventory = new BlockInventory(this);
     }
 
     public BlockEntityFramingTable(BlockPos pos, BlockState state) {
@@ -56,169 +58,8 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         return materialData;
     }
 
-    @Override
-    public int getContainerSize () {
-        return 5;
-    }
-
-    @Override
-    public boolean isEmpty () {
-        if (!inputStack.isEmpty())
-            return false;
-        if (!resultStack.isEmpty())
-            return false;
-        if (!materialData.getSide().isEmpty())
-            return false;
-        if (!materialData.getTrim().isEmpty())
-            return false;
-        if (!materialData.getFront().isEmpty())
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public ItemStack getItem (int slot) {
-        return switch (slot) {
-            case SLOT_INPUT -> inputStack;
-            case SLOT_FRONT -> materialData.getFront();
-            case SLOT_SIDE -> materialData.getSide();
-            case SLOT_TRIM -> materialData.getTrim();
-            case SLOT_RESULT -> resultStack;
-            default -> null;
-        };
-    }
-
-    @Override
-    public ItemStack removeItem (int slot, int amount) {
-        if (slot < 0 || slot > getContainerSize() || amount <= 0)
-            return ItemStack.EMPTY;
-
-        ItemStack ret = getItem(slot).split(amount);
-
-        rebuildResult();
-        setChanged();
-
-        return ret;
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate (int slot) {
-        if (slot < 0 || slot > getContainerSize())
-            return ItemStack.EMPTY;
-
-        ItemStack result = getItem(slot);
-        setItem(slot, ItemStack.EMPTY);
-        return result;
-    }
-
-    @Override
-    public void setItem (int slot, ItemStack stack) {
-        if (slot == SLOT_RESULT)
-            return;
-
-        switch (slot) {
-            case SLOT_INPUT -> setInputItem(stack);
-            case SLOT_FRONT -> materialData.setFront(stack);
-            case SLOT_SIDE -> materialData.setSide(stack);
-            case SLOT_TRIM -> materialData.setTrim(stack);
-        }
-
-        rebuildResult();
-        setChanged();
-    }
-
-    private void setInputItem (ItemStack stack) {
-        if (level != null && !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            if (block instanceof IFramedBlock fb) {
-                MaterialData data = new MaterialData();
-                data.read(stack.getOrCreateTag());
-
-                if (fb.supportsFrameMaterial(FrameMaterial.SIDE)) {
-                    if (!materialData.getSide().isEmpty() && !data.getSide().isEmpty()) {
-                        resultStack = stack;
-                        return;
-                    }
-                }
-
-                if (fb.supportsFrameMaterial(FrameMaterial.TRIM)) {
-                    if (!materialData.getTrim().isEmpty() && !data.getTrim().isEmpty()) {
-                        resultStack = stack;
-                        return;
-                    }
-                }
-
-                if (fb.supportsFrameMaterial(FrameMaterial.FRONT)) {
-                    if (!materialData.getFront().isEmpty() && !data.getFront().isEmpty()) {
-                        resultStack = stack;
-                        return;
-                    }
-                }
-
-                ItemStack source = data.getFrameBase();
-                if (!source.isEmpty()) {
-                    source.setTag(stack.getOrCreateTag().copy());
-                    MaterialData empty = new MaterialData();
-                    empty.write(source.getTag());
-
-                    int count = stack.getCount();
-                    inputStack = source.copyWithCount(count);
-
-                    materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide().copyWithCount(count) : ItemStack.EMPTY);
-                    materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim().copyWithCount(count) : ItemStack.EMPTY);
-                    materialData.setFront(fb.supportsFrameMaterial(FrameMaterial.FRONT) ? data.getFront().copyWithCount(count) : ItemStack.EMPTY);
-
-                    return;
-                }
-            }
-        }
-
-        inputStack = stack;
-    }
-
-    private void rebuildResult () {
-        ItemStack target = getItem(BlockEntityFramingTable.SLOT_INPUT);
-        if (target.isEmpty()) {
-            resultStack = ItemStack.EMPTY;
-            return;
-        }
-
-        ItemStack matSide = getItem(BlockEntityFramingTable.SLOT_SIDE);
-        ItemStack matTrim = getItem(BlockEntityFramingTable.SLOT_TRIM);
-        ItemStack matFront = getItem(BlockEntityFramingTable.SLOT_FRONT);
-
-        if (!target.isEmpty() && target.getItem() instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            if (block instanceof IFramedSourceBlock fsb) {
-                if (matSide.isEmpty())
-                    resultStack = ItemStack.EMPTY;
-                else
-                    resultStack = fsb.makeFramedItem(target, matSide, matTrim, matFront);
-            }
-        }
-
-        int count = resultStack.getCount();
-        if (!matSide.isEmpty())
-            count = Math.min(count, matSide.getCount());
-        if (!matTrim.isEmpty())
-            count = Math.min(count, matTrim.getCount());
-        if (!matFront.isEmpty())
-            count = Math.min(count, matFront.getCount());
-
-        resultStack.setCount(count);
-    }
-
-    @Override
-    public boolean stillValid (Player player) {
-        return Container.stillValidBlockEntity(this, player);
-    }
-
-    @Override
-    public void clearContent () {
-        inputStack = ItemStack.EMPTY;
-        resultStack = ItemStack.EMPTY;
-        materialData.clear();
+    public BlockInventory inventory () {
+        return inventory;
     }
 
     @Override
@@ -292,16 +133,6 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
     }
 
     @Override
-    public boolean canPlaceItem (int slotIndex, ItemStack stack) {
-        if (slotIndex == SLOT_INPUT)
-            return isItemValidTarget(stack);
-        if (slotIndex == SLOT_SIDE || slotIndex == SLOT_TRIM || slotIndex == SLOT_FRONT)
-            return isItemValidMaterial(stack);
-
-        return false;
-    }
-
-    @Override
     public @NotNull Component getDisplayName () {
         return Component.translatable("container.storagedrawers.framing_table");
     }
@@ -334,6 +165,195 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements Containe
         @Override
         public AbstractContainerMenu createMenu (int id, Inventory inventory, Player player) {
             return new ContainerFramingTable(ModContainers.FRAMING_TABLE.get(), id, inventory, entity);
+        }
+    }
+
+    public static class BlockInventory implements Container
+    {
+        private BlockEntityFramingTable entity;
+
+        private BlockInventory (BlockEntityFramingTable entity) {
+            this.entity = entity;
+        }
+
+        @Override
+        public int getContainerSize () {
+            return 5;
+        }
+
+        @Override
+        public boolean isEmpty () {
+            if (!entity.inputStack.isEmpty())
+                return false;
+            if (!entity.resultStack.isEmpty())
+                return false;
+            if (!entity.materialData.getSide().isEmpty())
+                return false;
+            if (!entity.materialData.getTrim().isEmpty())
+                return false;
+            if (!entity.materialData.getFront().isEmpty())
+                return false;
+
+            return true;
+        }
+
+        @Override
+        public boolean canPlaceItem (int slotIndex, ItemStack stack) {
+            if (slotIndex == SLOT_INPUT)
+                return entity.isItemValidTarget(stack);
+            if (slotIndex == SLOT_SIDE || slotIndex == SLOT_TRIM || slotIndex == SLOT_FRONT)
+                return isItemValidMaterial(stack);
+
+            return false;
+        }
+
+        @Override
+        public ItemStack getItem (int slot) {
+            return switch (slot) {
+                case SLOT_INPUT -> entity.inputStack;
+                case SLOT_FRONT -> entity.materialData.getFront();
+                case SLOT_SIDE -> entity.materialData.getSide();
+                case SLOT_TRIM -> entity.materialData.getTrim();
+                case SLOT_RESULT -> entity.resultStack;
+                default -> null;
+            };
+        }
+
+        @Override
+        public ItemStack removeItem (int slot, int amount) {
+            if (slot < 0 || slot > getContainerSize() || amount <= 0)
+                return ItemStack.EMPTY;
+
+            ItemStack ret = getItem(slot).split(amount);
+
+            rebuildResult();
+            setChanged();
+
+            return ret;
+        }
+
+        @Override
+        public ItemStack removeItemNoUpdate (int slot) {
+            if (slot < 0 || slot > getContainerSize())
+                return ItemStack.EMPTY;
+
+            ItemStack result = getItem(slot);
+            setItem(slot, ItemStack.EMPTY);
+            return result;
+        }
+
+        @Override
+        public void setItem (int slot, ItemStack stack) {
+            if (slot == SLOT_RESULT)
+                return;
+
+            switch (slot) {
+                case SLOT_INPUT -> setInputItem(stack);
+                case SLOT_FRONT -> entity.materialData.setFront(stack);
+                case SLOT_SIDE -> entity.materialData.setSide(stack);
+                case SLOT_TRIM -> entity.materialData.setTrim(stack);
+            }
+
+            rebuildResult();
+            setChanged();
+        }
+
+        @Override
+        public void setChanged () {
+
+        }
+
+        private void setInputItem (ItemStack stack) {
+            if (entity.level != null && !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
+                Block block = blockItem.getBlock();
+                if (block instanceof IFramedBlock fb) {
+                    MaterialData data = new MaterialData();
+                    data.read(stack.getOrCreateTag());
+
+                    if (fb.supportsFrameMaterial(FrameMaterial.SIDE)) {
+                        if (!entity.materialData.getSide().isEmpty() && !data.getSide().isEmpty()) {
+                            entity.resultStack = stack;
+                            return;
+                        }
+                    }
+
+                    if (fb.supportsFrameMaterial(FrameMaterial.TRIM)) {
+                        if (!entity.materialData.getTrim().isEmpty() && !data.getTrim().isEmpty()) {
+                            entity.resultStack = stack;
+                            return;
+                        }
+                    }
+
+                    if (fb.supportsFrameMaterial(FrameMaterial.FRONT)) {
+                        if (!entity.materialData.getFront().isEmpty() && !data.getFront().isEmpty()) {
+                            entity.resultStack = stack;
+                            return;
+                        }
+                    }
+
+                    ItemStack source = data.getFrameBase();
+                    if (!source.isEmpty()) {
+                        source.setTag(stack.getOrCreateTag().copy());
+                        MaterialData empty = new MaterialData();
+                        empty.write(source.getTag());
+
+                        int count = stack.getCount();
+                        entity.inputStack = source.copyWithCount(count);
+
+                        entity.materialData.setSide(fb.supportsFrameMaterial(FrameMaterial.SIDE) ? data.getSide().copyWithCount(count) : ItemStack.EMPTY);
+                        entity.materialData.setTrim(fb.supportsFrameMaterial(FrameMaterial.TRIM) ? data.getTrim().copyWithCount(count) : ItemStack.EMPTY);
+                        entity.materialData.setFront(fb.supportsFrameMaterial(FrameMaterial.FRONT) ? data.getFront().copyWithCount(count) : ItemStack.EMPTY);
+
+                        return;
+                    }
+                }
+            }
+
+            entity.inputStack = stack;
+        }
+
+        private void rebuildResult () {
+            ItemStack target = getItem(BlockEntityFramingTable.SLOT_INPUT);
+            if (target.isEmpty()) {
+                entity.resultStack = ItemStack.EMPTY;
+                return;
+            }
+
+            ItemStack matSide = getItem(BlockEntityFramingTable.SLOT_SIDE);
+            ItemStack matTrim = getItem(BlockEntityFramingTable.SLOT_TRIM);
+            ItemStack matFront = getItem(BlockEntityFramingTable.SLOT_FRONT);
+
+            if (!target.isEmpty() && target.getItem() instanceof BlockItem blockItem) {
+                Block block = blockItem.getBlock();
+                if (block instanceof IFramedSourceBlock fsb) {
+                    if (matSide.isEmpty())
+                        entity.resultStack = ItemStack.EMPTY;
+                    else
+                        entity.resultStack = fsb.makeFramedItem(target, matSide, matTrim, matFront);
+                }
+            }
+
+            int count = entity.resultStack.getCount();
+            if (!matSide.isEmpty())
+                count = Math.min(count, matSide.getCount());
+            if (!matTrim.isEmpty())
+                count = Math.min(count, matTrim.getCount());
+            if (!matFront.isEmpty())
+                count = Math.min(count, matFront.getCount());
+
+            entity.resultStack.setCount(count);
+        }
+
+        @Override
+        public boolean stillValid (Player player) {
+            return Container.stillValidBlockEntity(entity, player);
+        }
+
+        @Override
+        public void clearContent () {
+            entity.inputStack = ItemStack.EMPTY;
+            entity.resultStack = ItemStack.EMPTY;
+            entity.materialData.clear();
         }
     }
 }

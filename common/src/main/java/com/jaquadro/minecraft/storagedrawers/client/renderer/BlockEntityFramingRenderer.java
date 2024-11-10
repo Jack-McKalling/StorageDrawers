@@ -54,7 +54,7 @@ public class BlockEntityFramingRenderer implements BlockEntityRenderer<BlockEnti
         if (matData.getEffectiveSide().isEmpty())
             return;
 
-        ItemStack target = blockEntityTable.getItem(0);
+        ItemStack target = blockEntityTable.inventory().getItem(0);
         if (target == null || target.isEmpty())
             return;
 

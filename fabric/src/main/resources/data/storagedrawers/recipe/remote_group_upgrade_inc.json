@@ -7,5 +7,5 @@
         "E": { "item": "minecraft:ender_pearl" },
         "X": { "item": "storagedrawers:remote_upgrade" }
     },
-    "result": { "item": "storagedrawers:remote_group_upgrade" }
+    "result": { "id": "storagedrawers:remote_group_upgrade" }
 }

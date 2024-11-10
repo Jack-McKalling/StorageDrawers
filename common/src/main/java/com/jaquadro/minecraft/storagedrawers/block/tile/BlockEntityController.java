@@ -658,9 +658,11 @@ public class BlockEntityController extends BaseBlockEntity implements IDrawerGro
         searchQueue.add(root);
         searchDiscovered.add(root);
 
+        BlockPos origin = getBlockPos();
+
         while (!searchQueue.isEmpty()) {
             BlockPos coord = searchQueue.remove();
-            int depth = Math.max(Math.max(Math.abs(coord.getX() - root.getX()), Math.abs(coord.getY() - root.getY())), Math.abs(coord.getZ() - root.getZ()));
+            int depth = Math.max(Math.max(Math.abs(coord.getX() - origin.getX()), Math.abs(coord.getY() - origin.getY())), Math.abs(coord.getZ() - origin.getZ()));
             if (depth > range)
                 continue;
 

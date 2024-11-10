@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "EXE"
+    ],
+    "key": {
+        "E": "minecraft:ender_pearl",
+        "X": "storagedrawers:remote_upgrade"
+    },
+    "result": { "id": "storagedrawers:remote_group_upgrade" }
+}

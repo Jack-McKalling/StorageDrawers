@@ -2,3 +2,4 @@
 - Fix remote upgrade not respecting controller range
 - Framing tables no longer interact with hoppers
 - Add upgrade recipes to turn remote upgrades into group versions
+- Add zh_tw translation (contrib by Lobster0228)

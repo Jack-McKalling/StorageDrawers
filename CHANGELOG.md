@@ -1,5 +1,10 @@
 [13.8.3]
 - Fixed framing table voiding framed input if materials already present
+- Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
+- Fix remote upgrade not respecting controller range
+- Framing tables no longer interact with hoppers
+- Add upgrade recipes to turn remote upgrades into group versions
+- Add zh_tw translation (contrib by Lobster0228)
 
 [13.8.2]
 - Fix uncommon crash when remote upgrades invalidate (contrib by HugoSandell)

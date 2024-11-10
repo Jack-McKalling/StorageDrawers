@@ -1,3 +1,4 @@
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
 - Fix remote upgrade not respecting controller range
 - Framing tables no longer interact with hoppers
+- Add upgrade recipes to turn remote upgrades into group versions

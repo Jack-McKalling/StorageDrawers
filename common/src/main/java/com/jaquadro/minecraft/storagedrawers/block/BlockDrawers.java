@@ -561,7 +561,7 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         boolean hasContents = false;
         for (int i = 0; i < tile.getGroup().getDrawerCount(); i++) {
             IDrawer drawer = tile.getGroup().getDrawer(i);
-            if (!drawer.isEmpty())
+            if (!drawer.isEmpty() || drawer.isMissing())
                 hasContents = true;
         }
         for (int i = 0; i < tile.upgrades().getSlotCount(); i++) {

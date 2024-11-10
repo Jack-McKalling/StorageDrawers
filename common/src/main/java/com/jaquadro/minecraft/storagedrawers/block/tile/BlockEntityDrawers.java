@@ -226,6 +226,16 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         }
     }
 
+    private boolean controllerInrange (BlockPos controllerPos) {
+        BlockPos pos = getBlockPos();
+        int distX = Math.abs(controllerPos.getX() - pos.getX());
+        int distY = Math.abs(controllerPos.getY() - pos.getY());
+        int distZ = Math.abs(controllerPos.getZ() - pos.getZ());
+
+        int range = ModCommonConfig.INSTANCE.GENERAL.controllerRange.get();
+        return distX <= range && distY <= range && distZ <= range;
+    }
+
     @Override
     public boolean supportsDirectControllerLink () {
         return true;

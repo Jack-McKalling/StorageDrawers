@@ -69,7 +69,7 @@ dependencies {
 
     compileOnly("curse.maven:cofh-core-69162:5374122")
 
-    implementation(fg.deobf("curse.maven:fluid-drawers-legacy-597669:5340725"))
+    //implementation(fg.deobf("curse.maven:fluid-drawers-legacy-597669:5340725"))
 
     // JEI
     //runtimeOnly("mezz.jei:jei-1.21-forge:19.8.2.99")

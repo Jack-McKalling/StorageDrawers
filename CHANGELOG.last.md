@@ -1,2 +1,2 @@
-- Fix uncommon crash when remote upgrades invalidate (contrib by HugoSandell)
-- FABRIC: Fix drawers not honoring void upgrade when other inventories try to insert into them
+- Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
+- Fix remote upgrade not respecting controller range

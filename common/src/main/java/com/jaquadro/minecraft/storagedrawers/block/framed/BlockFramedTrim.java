@@ -44,6 +44,11 @@ public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBl
     }
 
     @Override
+    public boolean canUseForRetrim () {
+        return false;
+    }
+
+    @Override
     @NotNull
     public List<ItemStack> getDrops (@NotNull BlockState state, LootParams.Builder builder) {
         List<ItemStack> items = new ArrayList<>();

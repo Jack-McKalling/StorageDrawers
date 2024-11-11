@@ -1,1 +1,2 @@
 - Fix framing table voiding unused materials
+- Prevent framed trim from being used for retrimming

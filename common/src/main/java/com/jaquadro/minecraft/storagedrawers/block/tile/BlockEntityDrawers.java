@@ -6,10 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.*;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IProtectable;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.ControllerData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.DetachedDrawerData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
-import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.UpgradeData;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.*;
 import com.jaquadro.minecraft.storagedrawers.capabilities.BasicDrawerAttributes;
 import com.jaquadro.minecraft.storagedrawers.config.ModCommonConfig;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
@@ -48,7 +45,7 @@ import java.util.UUID;
 
 public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity /*, INameable */
 {
-    //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
+    private final CustomNameData customNameData = new CustomNameData();
     private final MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
     private final ControllerData controllerData = new ControllerData();
@@ -197,7 +194,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         upgradeData.setDrawerAttributes(drawerAttributes);
 
-        //injectPortableData(customNameData);
+        injectPortableData(customNameData);
         injectPortableData(upgradeData);
         injectPortableData(controllerData);
 
@@ -290,6 +287,10 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     @Override
     public MaterialData material () {
         return materialData;
+    }
+
+    public CustomNameData customName () {
+        return customNameData;
     }
 
     @Override
@@ -795,6 +796,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         public Component getDisplayName () {
+            if (entity.customNameData.hasCustomName())
+                return entity.customNameData.getDisplayName();
+
             ItemStack stack = new ItemStack(entity.getBlockState().getBlock());
             return stack.getItem().getName(stack);
         }

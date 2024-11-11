@@ -1,6 +1,7 @@
 [12.10.4]
 - Fix framing table voiding unused materials
 - Prevent framed trim from being used for retrimming
+- Add renaming support for drawers
 
 [12.10.3]
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.

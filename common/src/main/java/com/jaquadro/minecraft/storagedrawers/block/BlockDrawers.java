@@ -174,9 +174,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             blockEntity.readPortable(tag);
         }
 
-//        if (stack.hasCustomHoverName()) {
-//            //    blockEntity.setCustomName(stack.getDisplayName());
-//        }
+        if (stack.hasCustomHoverName()) {
+            blockEntity.customName().setName(stack.getHoverName());
+        }
 
         Item key = null;
         if (entity != null) {
@@ -388,34 +388,6 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         return new BlockEntityDrawers.ContentProvider(blockEntityDrawers);
     }
 
-    /*private void openUI(InteractContext context) {
-        BlockEntityDrawers blockEntityDrawers = context.getCheckedEntity(BlockEntityDrawers.class);
-
-        NetworkHooks.openScreen((ServerPlayer) context.player, new MenuProvider()
-        {
-            @Override
-            @NotNull
-            public Component getDisplayName () {
-                ItemStack stack = new ItemStack(BlockDrawers.this);
-                return stack.getItem().getName(stack);
-            }
-
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu (int windowId, @NotNull Inventory playerInv, @NotNull Player playerEntity) {
-                if (drawerCount == 1)
-                    return new ContainerDrawers1(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 2)
-                    return new ContainerDrawers2(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 4)
-                    return new ContainerDrawers4(windowId, playerInv, blockEntityDrawers);
-                else if (drawerCount == 3 && BlockDrawers.this instanceof BlockCompDrawers)
-                    return new ContainerDrawersComp3(windowId, playerInv, blockEntityDrawers);
-                return null;
-            }
-        }, extraData -> extraData.writeBlockPos(context.pos));
-    }*/
-
     @Override
     public InteractionResult putSlot (InteractContext context, boolean altAction) {
         ItemStack item = context.player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -575,6 +547,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             data.put("tile", tiledata);
             drop.setTag(data);
         }
+
+        if (tile.customName().hasCustomName())
+            drop.setHoverName(tile.customName().getDisplayName());
 
         return drop;
     }

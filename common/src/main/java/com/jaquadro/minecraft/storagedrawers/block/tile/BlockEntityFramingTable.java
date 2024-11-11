@@ -3,6 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.block.tile;
 import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedSourceBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
+import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.CustomNameData;
 import com.jaquadro.minecraft.storagedrawers.block.tile.tiledata.MaterialData;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
 import com.jaquadro.minecraft.storagedrawers.core.ModContainers;
@@ -35,12 +36,15 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
     public static final int SLOT_RESULT = 4;
 
     private final BlockInventory inventory;
+    private final CustomNameData customNameData = new CustomNameData();
     private final MaterialData materialData = new MaterialData();
     protected ItemStack inputStack = ItemStack.EMPTY;
     protected ItemStack resultStack = ItemStack.EMPTY;
 
     public BlockEntityFramingTable (BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
+
+        injectPortableData(customNameData);
 
         injectData(materialData);
         inventory = new BlockInventory(this);
@@ -56,6 +60,10 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
 
     public MaterialData material () {
         return materialData;
+    }
+
+    public CustomNameData customName () {
+        return customNameData;
     }
 
     public BlockInventory inventory () {
@@ -158,6 +166,9 @@ public class BlockEntityFramingTable extends BaseBlockEntity implements MenuProv
 
         @Override
         public Component getDisplayName () {
+            if (entity.customNameData.hasCustomName())
+                return entity.customNameData.getDisplayName();
+
             return Component.translatable("container.storagedrawers.framing_table");
         }
 

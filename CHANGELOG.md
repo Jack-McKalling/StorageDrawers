@@ -1,3 +1,6 @@
+[12.10.4]
+- Fix framing table voiding unused materials
+
 [12.10.3]
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
 - Fix remote upgrade not respecting controller range

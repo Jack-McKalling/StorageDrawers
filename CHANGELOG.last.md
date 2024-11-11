@@ -1,5 +1,1 @@
-- Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
-- Fix remote upgrade not respecting controller range
-- Framing tables no longer interact with hoppers
-- Add upgrade recipes to turn remote upgrades into group versions
-- Add zh_tw translation (contrib by Lobster0228)
+- Fix framing table voiding unused materials

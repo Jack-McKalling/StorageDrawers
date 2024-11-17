@@ -3,3 +3,4 @@
 - Add renaming support for drawers
 - Adds back conversion upgrade
   - Whitelists a few ore-based items by default, see config
+- Added de_de translation (contrib by Der-Kanzler)

@@ -4,6 +4,7 @@
 - Add renaming support for drawers
 - Adds back conversion upgrade
   - Whitelists a few ore-based items by default, see config
+- Added de_de translation (contrib by Der-Kanzler)
 
 [12.10.3]
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.

@@ -5,6 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute
 import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
+import com.jaquadro.minecraft.storagedrawers.util.ItemStackTagMatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -180,9 +181,10 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             protoStack.setCount(1);
             count = 0;
 
-            //if (attrs.isDictConvertible())
-            //    matcher = new ItemStackOreMatcher(protoStack);
-            //else
+            IDrawerAttributes attrs = getAttributes();
+            if (attrs.isDictConvertible())
+                matcher = new ItemStackTagMatcher(protoStack);
+            else
                 matcher = new ItemStackMatcher(protoStack);
 
             group.syncSlots();
@@ -198,9 +200,10 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
             protoStack.setCount(1);
             count = 0;
 
-            //if (attrs.isDictConvertible())
-            //    matcher = new ItemStackOreMatcher(protoStack);
-            //else
+            IDrawerAttributes attrs = getAttributes();
+            if (attrs.isDictConvertible())
+                matcher = new ItemStackTagMatcher(protoStack);
+            else
                 matcher = new ItemStackMatcher(protoStack);
 
             return this;

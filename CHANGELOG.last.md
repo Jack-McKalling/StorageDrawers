@@ -1,3 +1,5 @@
 - Fix framing table voiding unused materials
 - Prevent framed trim from being used for retrimming
 - Add renaming support for drawers
+- Adds back conversion upgrade
+  - Whitelists a few ore-based items by default, see config

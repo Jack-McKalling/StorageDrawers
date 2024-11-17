@@ -3,6 +3,9 @@ package com.texelsaurus.minecraft.chameleon.config;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 // Incomplete implementation -- this is just a proxy to default config values
 
 public class StaticConfig implements ChameleonConfig
@@ -43,6 +46,11 @@ public class StaticConfig implements ChameleonConfig
     @Override
     public <T extends Enum<T>> ConfigEntry<T> defineEnum (String name, T defaultValue) {
         return new FabricConfigEntry<T>().name(name).defaultValue(defaultValue);
+    }
+
+    @Override
+    public <T> ConfigEntry<List<? extends T>> defineList (String name, List<? extends T> defaultList, Predicate<Object> elementValidator) {
+        return new FabricConfigEntry<List<? extends T>>().name(name).defaultValue(defaultList);
     }
 
     @Override

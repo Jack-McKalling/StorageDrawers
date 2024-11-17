@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#/#",
+        "/X/",
+        "#/#"
+    ],
+    "key": {
+        "/": { "item": "minecraft:stick" },
+        "#": { "item": "minecraft:lapis_lazuli" },
+        "X": { "item": "storagedrawers:upgrade_template" }
+    },
+    "result": { "item": "storagedrawers:conversion_upgrade" }
+}

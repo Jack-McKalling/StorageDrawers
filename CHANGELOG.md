@@ -2,6 +2,8 @@
 - Fix framing table voiding unused materials
 - Prevent framed trim from being used for retrimming
 - Add renaming support for drawers
+- Adds back conversion upgrade
+  - Whitelists a few ore-based items by default, see config
 
 [12.10.3]
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.

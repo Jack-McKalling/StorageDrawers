@@ -64,10 +64,12 @@ dependencies {
     compileOnly("curse.maven:the-one-probe-245211:4629624")
     //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
     // compileOnly since not yet updated for 41.0.64
-    compileOnly("curse.maven:jade-324717:5072729")
+    implementation(fg.deobf("curse.maven:jade-324717:5072729"))
     implementation(fg.deobf("curse.maven:emi-580555:5619582"))
 
-    compileOnly("curse.maven:cofh-core-69162:5374122")
+    implementation(fg.deobf("curse.maven:cofh-core-69162:5374122"))
+    implementation(fg.deobf("curse.maven:thermal-foundation-222880:5443583"))
+    implementation(fg.deobf("curse.maven:immersive-engineering-231951:5224387"))
 
     //implementation(fg.deobf("curse.maven:fluid-drawers-legacy-597669:5340725"))
 

@@ -42,6 +42,10 @@ public class BlockTrim extends Block implements INetworked, IFramedSourceBlock
         return "block." + ModConstants.MOD_ID + ".type.trim";
     }
 
+    public boolean canUseForRetrim () {
+        return true;
+    }
+
     @Override
     public ItemStack makeFramedItem (ItemStack source, ItemStack matSide, ItemStack matTrim, ItemStack matFront) {
         return FrameHelper.makeFramedItem(ModBlocks.FRAMED_TRIM.get(), source, matSide, matTrim, matFront);

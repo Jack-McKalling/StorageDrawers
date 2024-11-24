@@ -110,7 +110,7 @@ public class BlockStandardDrawers extends BlockDrawers implements IFramedSourceB
             return false;
 
         BlockTrim trim = (BlockTrim) protoBlock;
-        if (trim.getMatKey() == null || Objects.equals(trim.getMatKey(), ""))
+        if (trim.getMatKey() == null || Objects.equals(trim.getMatKey(), "") || !trim.canUseForRetrim())
             return false;
 
         var blockList = ModBlocks.getDrawersOfTypeAndSizeAndDepth(BlockStandardDrawers.class, getDrawerCount(), isHalfDepth())

@@ -540,6 +540,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
         }
 
+        if (tile.hasCustomName())
+            drop.set(DataComponents.CUSTOM_NAME, tile.getCustomName());
+
         return drop;
     }
 

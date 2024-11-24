@@ -1,3 +1,12 @@
+[13.8.4]
+- Fix framing table voiding unused materials
+- Prevent framed trim from being used for retrimming
+- Add renaming support for drawers
+- Adds back conversion upgrade
+  - Whitelists a few ore-based items by default, see config
+- Added de_de translation (contrib by Der-Kanzler)
+- Fix obsidian storage upgrade recipe
+
 [13.8.3]
 - Fixed framing table voiding framed input if materials already present
 - Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.

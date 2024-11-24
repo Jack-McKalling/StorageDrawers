@@ -7,6 +7,9 @@ import com.texelsaurus.minecraft.chameleon.config.ForgeApiConfig;
 import com.texelsaurus.minecraft.chameleon.config.StaticConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 public class FabricConfig implements ChameleonConfig
 {
     private ChameleonConfig configImpl;
@@ -45,6 +48,11 @@ public class FabricConfig implements ChameleonConfig
     @Override
     public <T extends Enum<T>> ConfigEntry<T> defineEnum (String name, T defaultValue) {
         return configImpl.defineEnum(name, defaultValue);
+    }
+
+    @Override
+    public <T> ConfigEntry<List<? extends T>> defineList (String name, List<? extends T> defaultList, Predicate<Object> elementValidator) {
+        return configImpl.defineList(name, defaultList, elementValidator);
     }
 
     @Override

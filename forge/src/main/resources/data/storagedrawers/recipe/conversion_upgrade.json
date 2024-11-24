@@ -1,14 +1,14 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "///",
-        "#X#",
-        "///"
+        "#/#",
+        "/X/",
+        "#/#"
     ],
     "key": {
         "/": { "tag": "forge:rods/wooden" },
-        "#": { "item": "minecraft:obsidian" },
+        "#": { "item": "minecraft:lapis_lazuli" },
         "X": { "item": "storagedrawers:upgrade_template" }
     },
-    "result": { "id": "storagedrawers:obsidian_storage_upgrade" }
+    "result": { "id": "storagedrawers:conversion_upgrade" }
 }

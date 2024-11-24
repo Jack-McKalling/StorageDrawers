@@ -6,6 +6,7 @@ import com.jaquadro.minecraft.storagedrawers.capabilities.Capabilities;
 import com.jaquadro.minecraft.storagedrawers.inventory.ItemStackHelper;
 import com.jaquadro.minecraft.storagedrawers.util.CompactingHelper;
 import com.jaquadro.minecraft.storagedrawers.util.ItemStackMatcher;
+import com.jaquadro.minecraft.storagedrawers.util.ItemStackTagMatcher;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -412,14 +413,14 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         }
 
         private void populateSlots (@NotNull ItemStack itemPrototype) {
+            IDrawerAttributes attrs = getAttributes();
             Level world = group.getWorld();
             if (world == null) {
                 protoStack[0] = itemPrototype;
                 convRate[0] = 1;
-                matchers[0] = new ItemStackMatcher(protoStack[0]);
-                //matchers[0] = attrs.isDictConvertible()
-                //    ? new ItemStackOreMatcher(protoStack[0])
-                //    : new ItemStackMatcher(protoStack[0]);
+                matchers[0] = attrs.isDictConvertible()
+                    ? new ItemStackTagMatcher(protoStack[0])
+                    : new ItemStackMatcher(protoStack[0]);
 
                 return;
             }
@@ -485,15 +486,15 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         private void populateRawSlot (int slot, @NotNull ItemStack itemPrototype, int rate) {
             protoStack[slot] = itemPrototype;
             convRate[slot] = rate;
-            matchers[slot] = new ItemStackMatcher(protoStack[slot]);
+
+            IDrawerAttributes attrs = getAttributes();
+            matchers[slot] = attrs.isDictConvertible()
+                ? new ItemStackTagMatcher(protoStack[slot])
+                : new ItemStackMatcher(protoStack[slot]);
 
             cachedProtoStack[slot] = itemPrototype;
             cachedConvRate[slot] = rate;
             cachedMatchers[slot] = matchers[slot];
-
-            //matchers[slot] = attrs.isDictConvertible()
-            //    ? new ItemStackOreMatcher(protoStack[slot])
-            //    : new ItemStackMatcher(protoStack[slot]);
         }
 
         private void normalizeGroup () {
@@ -566,10 +567,10 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
                 protoStack[slot] = ItemStack.parseOptional(provider, slotTag.getCompound("Item"));
                 convRate[slot] = slotTag.getByte("Conv");
 
-                matchers[slot] = new ItemStackMatcher(protoStack[slot]);
-                //matchers[slot] = attrs.isDictConvertible()
-                //    ? new ItemStackOreMatcher(protoStack[slot])
-                //    : new ItemStackMatcher(protoStack[slot]);
+                IDrawerAttributes attrs = getAttributes();
+                matchers[slot] = attrs.isDictConvertible()
+                    ? new ItemStackTagMatcher(protoStack[slot])
+                    : new ItemStackMatcher(protoStack[slot]);
             }
 
             // TODO: We should only need to normalize if we had blank items with a conv rate, but this fixes blocks that were saved broken
@@ -591,10 +592,10 @@ public class FractionalDrawerGroup extends BlockEntityDataShim implements IDrawe
         public void syncAttributes () {
             for (int i = 0; i < slotCount; i++) {
                 if (!protoStack[i].isEmpty()) {
-                    matchers[i] = new ItemStackMatcher(protoStack[i]);
-                    //matchers[i] = attrs.isDictConvertible()
-                    //    ? new ItemStackOreMatcher(protoStack[i])
-                    //    : new ItemStackMatcher(protoStack[i]);
+                    IDrawerAttributes attrs = getAttributes();
+                    matchers[i] = attrs.isDictConvertible()
+                        ? new ItemStackTagMatcher(protoStack[i])
+                        : new ItemStackMatcher(protoStack[i]);
                 }
             }
         }

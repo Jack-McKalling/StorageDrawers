@@ -3,6 +3,9 @@ package com.texelsaurus.minecraft.chameleon.service;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 public class NeoforgeConfig implements ChameleonConfig
 {
     private final ConfigSpec localSpec;
@@ -41,6 +44,11 @@ public class NeoforgeConfig implements ChameleonConfig
     @Override
     public <T extends Enum<T>> ConfigEntry<T> defineEnum (String name, T defaultValue) {
         return new ForgeConfigEntryEnum<T>(BUILDER).name(name).defaultValue(defaultValue);
+    }
+
+    @Override
+    public <T> ConfigEntry<List<? extends T>> defineList (String name, List<? extends T> defaultList, Predicate<Object> elementValidator) {
+        return new ForgeConfigEntryList<T>(BUILDER).validator(elementValidator).name(name).defaultValue(defaultList);
     }
 
     @Override
@@ -115,6 +123,24 @@ public class NeoforgeConfig implements ChameleonConfig
         @Override
         protected ModConfigSpec.ConfigValue<T> define () {
             return builder.defineEnum(name, defaultValue);
+        }
+    }
+
+    public class ForgeConfigEntryList<T> extends ForgeConfigEntry<List<? extends T>>
+    {
+        Predicate<Object> validator;
+        public ForgeConfigEntryList (ModConfigSpec.Builder builder) {
+            super(builder);
+            validator = x -> true;
+        }
+        public ForgeConfigEntryList<T> validator(Predicate<Object> validtor) {
+            if (validtor != null)
+                this.validator = validtor;
+            return this;
+        }
+        @Override
+        protected ModConfigSpec.ConfigValue<List<? extends T>> define () {
+            return builder.defineList(name, defaultValue, validator);
         }
     }
 }

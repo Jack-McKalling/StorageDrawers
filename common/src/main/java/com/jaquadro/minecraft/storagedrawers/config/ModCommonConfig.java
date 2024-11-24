@@ -5,6 +5,7 @@ import com.texelsaurus.minecraft.chameleon.service.ChameleonConfig;
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class ModCommonConfig extends ConfigSpec
@@ -14,6 +15,7 @@ public final class ModCommonConfig extends ConfigSpec
     private final ChameleonConfig commonConfig;
     public General GENERAL;
     public Integration INTEGRATION;
+    public Conversion CONVERSION;
     public Upgrades UPGRADES;
 
     private ModCommonConfig () {
@@ -28,6 +30,7 @@ public final class ModCommonConfig extends ConfigSpec
     public void init() {
         GENERAL = new General();
         INTEGRATION = new Integration();
+        CONVERSION = new Conversion();
         UPGRADES = new Upgrades();
     }
 
@@ -126,6 +129,41 @@ public final class ModCommonConfig extends ConfigSpec
                 .comment("When true, does not show current quantities unless quantify key was used")
                 .build();
 
+            commonConfig.popGroup();
+        }
+    }
+
+    public class Conversion {
+        public final ChameleonConfig.ConfigEntry<List<? extends String>> oreTypes;
+        public final ChameleonConfig.ConfigEntry<List<? extends String>> oreMaterials;
+        public final ChameleonConfig.ConfigEntry<List<? extends String>> tagWhitelist;
+        public final ChameleonConfig.ConfigEntry<List<? extends String>> tagBlacklist;
+        public final ChameleonConfig.ConfigEntry<List<? extends String>> itemEquivGroups;
+        public Conversion () {
+            commonConfig.pushGroup("Conversion");
+            oreTypes = commonConfig.defineList("oreTypeWhitelist", Arrays.asList(
+                    "forge:storage_blocks", "forge:ingots", "forge:nuggets"), null)
+                .comment("", "Each type will be combined with each material to create a set of whitelist entries.",
+                    "This is mainly a convenience for common ore-based materials.")
+                .build();
+            oreMaterials = commonConfig.defineList("oreMaterialWhitelist", Arrays.asList(
+                    "aluminum", "constantan", "steel", "uranium", "invar", "tin", "lead", "silver", "platinum", "nickel", "osmium", "bronze", "electrum"), null)
+                .comment("", "Each type will be combined with each material to create a set of whitelist entries.",
+                    "This is mainly a convenience for common ore-based materials.")
+                .build();
+            tagWhitelist = commonConfig.defineList("tagWhitelist", new ArrayList<String>(), null)
+                .comment("", "Each whitelist entry should be a fully namespaced tag, e.g. c:ingots/copper")
+                .build();
+            tagBlacklist = commonConfig.defineList("tagBlacklist", new ArrayList<String>(), null)
+                .comment("", "Each blacklist entry should be a fully namespaced tag, e.g. c:ingots/copper.",
+                    "All items not on the whitelist are blacklisted implicitly.  This can be used to exclude",
+                    "specific entries created from the ore whitelist set.")
+                .build();
+            itemEquivGroups = commonConfig.defineList("itemEquivalenceGroups", new ArrayList<String>(), null)
+                .comment("", "Each entry is a semicolon-separated list of fully-namespaced items. All items within the",
+                    "same entry are considered equivalent and convertible/interchangeable.",
+                    "Example: [\"thermal:nickel_ore;immersiveengineering:ore_nickel\"]")
+                .build();
             commonConfig.popGroup();
         }
     }

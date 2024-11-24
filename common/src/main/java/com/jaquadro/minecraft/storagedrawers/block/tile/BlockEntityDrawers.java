@@ -27,11 +27,13 @@ import com.texelsaurus.minecraft.chameleon.inventory.content.PositionContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -46,9 +48,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity /*, INameable */
+public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDrawerGroup, IProtectable, INetworked, IFramedBlockEntity, Nameable
 {
-    //private CustomNameData customNameData = new CustomNameData("storagedrawers.container.drawers");
     private MaterialData materialData = new MaterialData();
     private final UpgradeData upgradeData = new DrawerUpgradeData();
     private final ControllerData controllerData = new ControllerData();
@@ -60,6 +61,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
     //private boolean taped = false;
     private UUID owner;
     private String securityKey;
+    private Component name;
 
     protected final IDrawerAttributesModifiable drawerAttributes;
 
@@ -596,10 +598,6 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         loading = true;
         super.readPortable(provider, tag);
 
-        //material = null;
-        //if (tag.hasKey("Mat"))
-        //    material = tag.getString("Mat");
-
         if (tag.contains("Lock")) {
             EnumSet<LockAttribute> attrs = LockAttribute.getEnumSet(tag.getByte("Lock"));
             if (attrs != null) {
@@ -635,15 +633,15 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         else
             drawerAttributes.setPriority(0);
 
+        if (tag.contains("CustomName", 8))
+            name = parseCustomNameSafe(tag.getString("CustomName"), provider);
+
         loading = false;
     }
 
     @Override
     public CompoundTag writePortable (HolderLookup.Provider provider, CompoundTag tag) {
         tag = super.writePortable(provider, tag);
-
-        //if (material != null)
-        //    tag.setString("Mat", material);
 
         EnumSet<LockAttribute> attrs = EnumSet.noneOf(LockAttribute.class);
         if (drawerAttributes.isItemLocked(LockAttribute.LOCK_EMPTY))
@@ -669,6 +667,9 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         if (drawerAttributes.getPriority() != 0)
             tag.putInt("Pri", drawerAttributes.getPriority());
+
+        if (name != null)
+            tag.putString("CustomName", Component.Serializer.toJson(name, provider));
 
         return tag;
     }
@@ -734,24 +735,32 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
         return getGroup().getAccessibleDrawerSlots();
     }
 
-    /*@Override
-    public String getName () {
-        return customNameData.getName();
+    @Override
+    public Component getName() {
+        return (this.name != null ? this.name : Component.translatable("block.storagedrawers.framing_table"));
     }
 
     @Override
-    public boolean hasCustomName () {
-        return customNameData.hasCustomName();
+    public Component getCustomName() {
+        return this.name;
     }
 
     @Override
-    public ITextComponent getDisplayName () {
-        return customNameData.getDisplayName();
+    protected void applyImplicitComponents(DataComponentInput input) {
+        super.applyImplicitComponents(input);
+        this.name = input.get(DataComponents.CUSTOM_NAME);
     }
 
-    public void setCustomName (ITextComponent name) {
-        customNameData.setName(name);
-    }*/
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder builder) {
+        super.collectImplicitComponents(builder);
+        builder.set(DataComponents.CUSTOM_NAME, this.name);
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        tag.remove("CustomName");
+    }
 
     @Override
     public <T> T getCapability (ChameleonCapability<T> capability) {
@@ -790,8 +799,7 @@ public abstract class BlockEntityDrawers extends BaseBlockEntity implements IDra
 
         @Override
         public Component getDisplayName () {
-            ItemStack stack = new ItemStack(entity.getBlockState().getBlock());
-            return stack.getItem().getName(stack);
+            return entity.getDisplayName();
         }
 
         @Nullable

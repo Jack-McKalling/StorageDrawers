@@ -175,10 +175,6 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             blockEntity.readPortable(world.registryAccess(), customdata.copyTag());
         }
 
-//        if (stack.hasCustomHoverName()) {
-//            //    blockEntity.setCustomName(stack.getDisplayName());
-//        }
-
         Item key = null;
         if (entity != null) {
             if (entity.getOffhandItem().getItem() instanceof ItemKey itemKey)
@@ -539,6 +535,9 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
             CompoundTag tiledata = tile.saveWithId(tile.getLevel().registryAccess());
             drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tiledata));
         }
+
+        if (tile.hasCustomName())
+            drop.set(DataComponents.CUSTOM_NAME, tile.getCustomName());
 
         return drop;
     }

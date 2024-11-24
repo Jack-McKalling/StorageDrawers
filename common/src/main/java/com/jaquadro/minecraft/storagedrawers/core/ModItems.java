@@ -41,7 +41,7 @@ public final class ModItems
         VOID_UPGRADE = register("void_upgrade", (p) -> new ItemUpgradeVoid(p), new Item.Properties()),
         CREATIVE_STORAGE_UPGRADE = register("creative_storage_upgrade", (p) -> new ItemUpgrade(p), new Item.Properties()),
         CREATIVE_VENDING_UPGRADE = register("creative_vending_upgrade", (p) -> new ItemUpgrade(p), new Item.Properties()),
-        //CONVERSION_UPGRADE = register("conversion_upgrade", (p) -> new ItemUpgrade(p), new Item.Properties()),
+        CONVERSION_UPGRADE = register("conversion_upgrade", (p) -> new ItemUpgrade(p), new Item.Properties()),
         REDSTONE_UPGRADE = register("redstone_upgrade", (p) -> new ItemUpgradeRedstone(EnumUpgradeRedstone.COMBINED, p), new Item.Properties()),
         MIN_REDSTONE_UPGRADE = register("min_redstone_upgrade", (p) -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MIN, p), new Item.Properties()),
         MAX_REDSTONE_UPGRADE = register("max_redstone_upgrade", (p) -> new ItemUpgradeRedstone(EnumUpgradeRedstone.MAX, p), new Item.Properties()),

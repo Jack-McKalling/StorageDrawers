@@ -2,7 +2,9 @@ package com.texelsaurus.minecraft.chameleon.service;
 
 import com.texelsaurus.minecraft.chameleon.config.ConfigSpec;
 
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface ChameleonConfig
@@ -20,6 +22,8 @@ public interface ChameleonConfig
     }
 
     <T extends Enum<T>> ConfigEntry<T> defineEnum(String name, T defaultValue);
+
+    <T> ConfigEntry<List<? extends T>> defineList(String name, List<? extends T> defaultList, Predicate<Object> elementValidator);
 
     void pushGroup(String name);
     void popGroup();

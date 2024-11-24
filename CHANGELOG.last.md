@@ -5,3 +5,10 @@
 - Framing tables no longer interact with hoppers
 - Add upgrade recipes to turn remote upgrades into group versions
 - Add zh_tw translation (contrib by Lobster0228)
+- Fix framing table voiding unused materials
+- Prevent framed trim from being used for retrimming
+- Add renaming support for drawers
+- Adds back conversion upgrade
+    - Whitelists a few ore-based items by default, see config
+- Added de_de translation (contrib by Der-Kanzler)
+- Fix obsidian storage upgrade recipe

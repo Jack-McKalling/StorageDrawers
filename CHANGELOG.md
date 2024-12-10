@@ -1,3 +1,13 @@
+[13.8.5]
+- Change debugTrace config item default value back to false
+  - If your value was already written as true, you will need to change this yourself
+- Remove item logging from block "take" function
+- Re-enable compacting tiers config option
+- Fix item insert overflow with creative storage upgrade
+- Fix pick block not cloning framed blocks correctly
+- Fix enable portability upgrade option being ignored
+- NEOFORGE: Restore The One Probe support
+
 [13.8.4]
 - Fix framing table voiding unused materials
 - Prevent framed trim from being used for retrimming

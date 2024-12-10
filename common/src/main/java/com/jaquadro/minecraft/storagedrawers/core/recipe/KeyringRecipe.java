@@ -42,7 +42,7 @@ public class KeyringRecipe extends ShapedRecipe
             contents = new KeyringContents(new ArrayList<>());
 
         KeyringContents.Mutable mutable = new KeyringContents.Mutable(contents);
-        mutable.tryInsert(center);
+        mutable.tryInsert(center.copy());
         result.set(ModDataComponents.KEYRING_CONTENTS.get(), mutable.toImmutable());
 
         return result;

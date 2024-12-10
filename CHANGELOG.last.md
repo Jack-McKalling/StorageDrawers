@@ -1,14 +1,4 @@
-- Fixed framing table voiding framed input if materials already present
-- Fixed framing table voiding framed input if materials already present
-- Fix drawer block with removed drawers reverting to default drawer when broken and placed agian.
-- Fix remote upgrade not respecting controller range
-- Framing tables no longer interact with hoppers
-- Add upgrade recipes to turn remote upgrades into group versions
-- Add zh_tw translation (contrib by Lobster0228)
-- Fix framing table voiding unused materials
-- Prevent framed trim from being used for retrimming
-- Add renaming support for drawers
-- Adds back conversion upgrade
-    - Whitelists a few ore-based items by default, see config
-- Added de_de translation (contrib by Der-Kanzler)
-- Fix obsidian storage upgrade recipe
+- Change debugTrace config item default value back to false
+  - If your value was already written as true, you will need to change this yourself
+- Remove item logging from block "take" function
+- Re-enable compacting tiers config option

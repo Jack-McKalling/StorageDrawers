@@ -1,5 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.config;
 
+import com.jaquadro.minecraft.storagedrawers.ModServices;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -54,7 +55,7 @@ public class CompTierRegistry
             // }
         }
 
-        // ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
+        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
 
         for (String rule : pendingRules) {
             register(rule);
@@ -76,7 +77,7 @@ public class CompTierRegistry
 
         records.add(r);
 
-        // StorageDrawers.log.info("New compacting rule " + convRate + " " + lower.getItem().toString() + " = 1 " + upper.getItem().toString());
+        ModServices.log.info("New compacting rule " + convRate + " " + lower.getItem() + " = 1 " + upper.getItem());
 
         return true;
     }

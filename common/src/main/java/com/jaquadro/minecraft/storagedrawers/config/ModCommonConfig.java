@@ -49,7 +49,6 @@ public final class ModCommonConfig extends ConfigSpec
         public ChameleonConfig.ConfigEntry<Boolean> heavyDrawers;
         public ChameleonConfig.ConfigEntry<Boolean> enablePersonalKey;
 
-
         public ChameleonConfig.ConfigEntry<List<? extends String>> compRules;
 
         public General() {
@@ -100,8 +99,9 @@ public final class ModCommonConfig extends ConfigSpec
                 .comment("If enabled, players can lock drawer interactions to just themselves.")
                 .build();
 
-            debugTrace = commonConfig.define("debugTrace", true).build();
-            //compRules = ModServices.CONFIG.defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj)).build();
+            debugTrace = commonConfig.define("debugTrace", false).build();
+
+            compRules = commonConfig.defineList("compactingRules", test, obj -> CompTierRegistry.validateRuleSyntax((String)obj)).build();
 
             commonConfig.popGroup();
         }

@@ -398,9 +398,6 @@ public abstract class BlockDrawers extends FaceSlotBlock implements INetworked, 
         else
             item = blockEntityDrawers.takeItemsFromSlot(context.slot, 1);
 
-        if (ModCommonConfig.INSTANCE.GENERAL.debugTrace.get())
-            ModServices.log.info((item.isEmpty()) ? "  null item" : "  " + item);
-
         if (!item.isEmpty()) {
             if (!context.player.getInventory().add(item)) {
                 dropItemStack(context.level, context.pos.relative(context.hit.getDirection()), context.player, item);

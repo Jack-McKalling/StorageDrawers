@@ -265,7 +265,10 @@ public abstract class StandardDrawerGroup extends BlockEntityDataShim implements
                     return 0;
 
                 int originalCount = count;
-                count = Math.min(count + amount, getMaxCapacity());
+                if((long)count + amount > Integer.MAX_VALUE)
+                    count = Integer.MAX_VALUE;
+                else
+                    count = Math.min(count + amount, getMaxCapacity());
 
                 if (count != originalCount && notify)
                     onAmountChanged();

@@ -1,12 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.block.framed;
 
-import com.jaquadro.minecraft.storagedrawers.ModServices;
 import com.jaquadro.minecraft.storagedrawers.api.framing.FrameMaterial;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityController;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityControllerIO;
 import com.jaquadro.minecraft.storagedrawers.components.item.FrameData;
 import com.jaquadro.minecraft.storagedrawers.core.ModDataComponents;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
@@ -14,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -57,6 +56,17 @@ public class BlockFramedController extends BlockController implements IFramedBlo
             drop.set(ModDataComponents.FRAME_DATA.get(), new FrameData(tile.material()));
 
         return drop;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+
+        BlockEntityController tile = WorldUtils.getBlockEntity(level, pos, BlockEntityController.class);
+        if (tile != null && !tile.material().isEmpty())
+            stack.set(ModDataComponents.FRAME_DATA.get(), new FrameData(tile.material()));
+
+        return stack;
     }
 
     @Override

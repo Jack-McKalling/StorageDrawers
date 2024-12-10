@@ -7,3 +7,4 @@
 - Fix block names for compacting drawers
 - Fix lore descriptions on most items
 - Fix keyring recipe losing key ingredient
+- Fix enable portability upgrade option being ignored

@@ -54,7 +54,7 @@ public class ItemKey extends Item
     @Override
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        ComponentUtil.appendSplitDescription(tooltip, this);
+        ComponentUtil.appendSplitDescription(tooltip, getDescription());
     }
 
     @NotNull

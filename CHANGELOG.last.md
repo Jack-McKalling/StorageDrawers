@@ -5,3 +5,4 @@
 - Fix item insert overflow with creative storage upgrade
 - Fix pick block not cloning framed blocks correctly
 - Fix block names for compacting drawers
+- Fix lore descriptions on most items

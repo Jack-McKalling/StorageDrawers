@@ -46,7 +46,7 @@ public class ItemUpgrade extends Item
 
     @Override
     public void appendHoverText (ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        ComponentUtil.appendSplitDescription(tooltip, this);
+        ComponentUtil.appendSplitDescription(tooltip, getDescription());
     }
 
     @NotNull

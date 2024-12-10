@@ -137,7 +137,7 @@ public class ItemKeyring extends Item
 
     @Override
     public void appendHoverText (@NotNull ItemStack itemStack, TooltipContext context, List<Component> list, TooltipFlag advanced) {
-        ComponentUtil.appendSplitDescription(list, this);
+        ComponentUtil.appendSplitDescription(list, getDescription());
     }
 
     @Override

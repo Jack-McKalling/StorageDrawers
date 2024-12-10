@@ -40,7 +40,7 @@ public class ItemDetachedDrawer extends Item implements IPortable
     @Override
     public void appendHoverText (@NotNull ItemStack stack, TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        ComponentUtil.appendSplitDescription(tooltip, this);
+        ComponentUtil.appendSplitDescription(tooltip, getDescription());
 
         if (ModCommonConfig.INSTANCE.GENERAL.heavyDrawers.get() && isHeavy(context.registries(), stack)) {
             tooltip.add(Component.translatable("tooltip.storagedrawers.drawers.too_heavy").withStyle(ChatFormatting.RED));

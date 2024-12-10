@@ -3,3 +3,4 @@
 - Remove item logging from block "take" function
 - Re-enable compacting tiers config option
 - Fix item insert overflow with creative storage upgrade
+- Fix pick block not cloning framed blocks correctly

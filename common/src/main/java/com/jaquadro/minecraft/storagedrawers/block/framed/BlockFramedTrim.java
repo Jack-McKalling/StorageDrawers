@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,6 +68,17 @@ public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBl
             drop.set(ModDataComponents.FRAME_DATA.get(), new FrameData(tile.material()));
 
         return drop;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+
+        BlockEntityTrim tile = WorldUtils.getBlockEntity(level, pos, BlockEntityTrim.class);
+        if (tile != null && !tile.material().isEmpty())
+            stack.set(ModDataComponents.FRAME_DATA.get(), new FrameData(tile.material()));
+
+        return stack;
     }
 
     @Override

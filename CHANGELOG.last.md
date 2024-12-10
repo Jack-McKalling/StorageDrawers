@@ -4,3 +4,4 @@
 - Re-enable compacting tiers config option
 - Fix item insert overflow with creative storage upgrade
 - Fix pick block not cloning framed blocks correctly
+- Fix block names for compacting drawers

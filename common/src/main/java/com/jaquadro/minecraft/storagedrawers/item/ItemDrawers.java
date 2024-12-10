@@ -64,7 +64,8 @@ public class ItemDrawers extends BlockItem implements IPortable
                 String mat = Component.translatable(drawers.getNameMatKey()).getString();
                 fallback = Component.translatable(drawers.getNameTypeKey(), mat);
             }
-        }
+        } else
+            fallback = super.getName(stack);
 
         return fallback;
     }

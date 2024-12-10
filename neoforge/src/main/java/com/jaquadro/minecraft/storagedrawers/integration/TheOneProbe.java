@@ -39,7 +39,7 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
             BlockEntityDrawers blockEntityDrawers = WorldUtils.getBlockEntity(world, data.getPos(), BlockEntityDrawers.class);
             if (blockEntityDrawers != null) {
                 DrawerOverlay overlay = new DrawerOverlay();
-                for (Component component : overlay.getOverlay(blockEntityDrawers)) {
+                for (Component component : overlay.getOverlay(blockEntityDrawers, true)) {
                     probe.text(component);
                 }
             }

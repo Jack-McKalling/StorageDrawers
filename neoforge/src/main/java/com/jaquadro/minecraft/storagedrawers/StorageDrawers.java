@@ -89,10 +89,6 @@ public class StorageDrawers
         //LocalIntegrationRegistry.instance().postInit();
     }
 
-    @SuppressWarnings("Convert2MethodRef")  // otherwise the class loader gets upset if TheOneProbe is not loaded
-    //private void onModQueueEvent(final InterModEnqueueEvent event) {
-    //    InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> new TheOneProbe());
-    //}
     private void onModConfigEvent(final ModConfigEvent event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON)
             ModCommonConfig.INSTANCE.setLoaded();

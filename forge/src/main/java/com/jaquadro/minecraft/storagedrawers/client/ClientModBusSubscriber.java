@@ -24,6 +24,8 @@ import com.jaquadro.minecraft.storagedrawers.inventory.FramingTableScreen;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.DetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.MissingBlockModel;
@@ -61,6 +63,10 @@ public class ClientModBusSubscriber {
             MenuScreens.register(ModContainers.DRAWER_CONTAINER_COMP_2.get(), DrawerScreen.Compacting2::new);
             MenuScreens.register(ModContainers.DRAWER_CONTAINER_COMP_3.get(), DrawerScreen.Compacting3::new);
             MenuScreens.register(ModContainers.FRAMING_TABLE.get(), FramingTableScreen::new);
+
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KEYBUTTON_DRAWER.get(), RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KEYBUTTON_CONCEALMENT.get(), RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KEYBUTTON_QUANTIFY.get(), RenderType.cutoutMipped());
         });
     }
 

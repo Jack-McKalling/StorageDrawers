@@ -8,3 +8,4 @@
 - Fix lore descriptions on most items
 - Fix keyring recipe losing key ingredient
 - Fix enable portability upgrade option being ignored
+- FORGE: Fix key buttons rendering black

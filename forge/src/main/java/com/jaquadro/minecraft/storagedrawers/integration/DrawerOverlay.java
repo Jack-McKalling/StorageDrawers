@@ -21,13 +21,19 @@ public class DrawerOverlay {
     public boolean respectQuantifyKey = ModCommonConfig.INSTANCE.INTEGRATION.wailaRespectQuantifyKey.get();
 
     public List<Component> getOverlay(final BlockEntityDrawers tile) {
+        return getOverlay(tile, true);
+    }
+
+    public List<Component> getOverlay(final BlockEntityDrawers tile, boolean includeContent) {
         final List<Component> result = new ArrayList<>();
 
         IDrawerAttributes attr = tile.getCapability(Capabilities.DRAWER_ATTRIBUTES);
         if (attr == null)
             attr = EmptyDrawerAttributes.EMPTY;
 
-        addContent(result, tile, attr);
+        if (includeContent)
+            addContent(result, tile, attr);
+
         addStackLimit(result, tile, attr);
         addStatus(result, tile, attr);
 

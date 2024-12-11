@@ -25,6 +25,9 @@ public class PlatformBlockEntityTrim extends BlockEntityTrim
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability (@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (!PlatformCapabilities.hasCapability(cap))
+            return LazyOptional.empty();
+
         return LazyOptional.of(() -> PlatformCapabilities.getCapability(cap, this));
     }
 }

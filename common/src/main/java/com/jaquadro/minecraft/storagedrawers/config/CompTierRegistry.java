@@ -55,7 +55,7 @@ public class CompTierRegistry
             // }
         }
 
-        //ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
+        ModCommonConfig.INSTANCE.onLoad(() -> ModCommonConfig.INSTANCE.GENERAL.compRules.get().forEach(this::register));
 
         for (String rule : pendingRules) {
             register(rule);

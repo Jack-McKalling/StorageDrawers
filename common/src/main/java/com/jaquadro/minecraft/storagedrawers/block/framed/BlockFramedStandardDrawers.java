@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,6 +56,20 @@ public class BlockFramedStandardDrawers extends BlockStandardDrawers implements 
         }
 
         return drop;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack (BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+
+        BlockEntityDrawers tile = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
+        if (tile != null && !tile.material().isEmpty()) {
+            CompoundTag data = stack.getOrCreateTag();
+            tile.material().write(data);
+            stack.setTag(data);
+        }
+
+        return stack;
     }
 
     @Override

@@ -62,7 +62,7 @@ dependencies {
     // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     compileOnly("curse.maven:the-one-probe-245211:4629624")
-    //implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19.3-7.0.0-2")
+    //implementation(fg.deobf("curse.maven:the-one-probe-245211:5159287"))
     // compileOnly since not yet updated for 41.0.64
     implementation(fg.deobf("curse.maven:jade-324717:5072729"))
     implementation(fg.deobf("curse.maven:emi-580555:5619582"))

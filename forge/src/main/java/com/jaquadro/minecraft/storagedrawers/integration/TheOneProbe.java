@@ -22,7 +22,9 @@ public class TheOneProbe implements Function<ITheOneProbe, Void> {
 
     @Override
     public Void apply(ITheOneProbe probe) {
-        probe.registerProvider(new DrawerProbeProvider());
+        if (ModClientConfig.INSTANCE.INTEGRATION.enableTheOneProbe.get())
+            probe.registerProvider(new DrawerProbeProvider());
+
         return null;
     }
 

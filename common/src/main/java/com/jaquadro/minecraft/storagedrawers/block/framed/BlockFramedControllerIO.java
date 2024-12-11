@@ -5,12 +5,12 @@ import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlock;
 import com.jaquadro.minecraft.storagedrawers.api.framing.IFramedBlockEntity;
 import com.jaquadro.minecraft.storagedrawers.block.BlockSlave;
 import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntitySlave;
-import com.jaquadro.minecraft.storagedrawers.block.tile.BlockEntityTrim;
 import com.jaquadro.minecraft.storagedrawers.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -57,6 +57,20 @@ public class BlockFramedControllerIO extends BlockSlave implements IFramedBlock
         drop.setTag(data);
 
         return drop;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack (BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+
+        BlockEntitySlave tile = WorldUtils.getBlockEntity(level, pos, BlockEntitySlave.class);
+        if (tile != null && !tile.material().isEmpty()) {
+            CompoundTag data = stack.getOrCreateTag();
+            tile.material().write(data);
+            stack.setTag(data);
+        }
+
+        return stack;
     }
 
     @Override

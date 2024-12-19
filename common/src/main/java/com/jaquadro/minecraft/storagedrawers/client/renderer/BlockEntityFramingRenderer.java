@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -25,6 +26,7 @@ import org.joml.Matrix4f;
 public class BlockEntityFramingRenderer implements BlockEntityRenderer<BlockEntityFramingTable>
 {
     private final BlockEntityRendererProvider.Context context;
+    private final ItemStackRenderState itemRenderState = new ItemStackRenderState();
 
     public BlockEntityFramingRenderer(BlockEntityRendererProvider.Context context) {
         this.context = context;
@@ -98,11 +100,16 @@ public class BlockEntityFramingRenderer implements BlockEntityRenderer<BlockEnti
 
         matrix.mulPose((new Matrix4f()).scale(scale, scale, scale));
 
-        ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-        BakedModel model = renderer.getModel(item, null, null, 0);
+        //ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+        //BakedModel model = renderer.getModel(item, null, null, 0);
 
         try {
-            renderer.render(item, ItemDisplayContext.GROUND, false, matrix, buffer, combinedLight, combinedOverlay, model);
+            context.getItemModelResolver().updateForTopItem(
+                itemRenderState, item, ItemDisplayContext.GROUND, false, context.getBlockEntityRenderDispatcher().level, null, 0
+            );
+
+            itemRenderState.render(matrix, buffer, combinedLight, combinedOverlay);
+            //renderer.render(item, ItemDisplayContext.GROUND, false, matrix, buffer, combinedLight, combinedOverlay, model);
         } catch (Exception e) { }
 
         matrix.popPose();

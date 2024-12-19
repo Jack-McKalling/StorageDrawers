@@ -97,7 +97,13 @@ public final class ModBlocks
         WARPED_FULL_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, false),
         WARPED_HALF_DRAWERS_1 = registerWoodenDrawerBlock(modLoc("warped"), 1, true),
         WARPED_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("warped"), 2, true),
-        WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true);
+        WARPED_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("warped"), 4, true),
+        PALE_OAK_FULL_DRAWERS_1 = registerWoodenDrawerBlock(modLoc("pale_oak"), 1, false),
+        PALE_OAK_FULL_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("pale_oak"), 2, false),
+        PALE_OAK_FULL_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("pale_oak"), 4, false),
+        PALE_OAK_HALF_DRAWERS_1 = registerWoodenDrawerBlock(modLoc("pale_oak"), 1, true),
+        PALE_OAK_HALF_DRAWERS_2 = registerWoodenDrawerBlock(modLoc("pale_oak"), 2, true),
+        PALE_OAK_HALF_DRAWERS_4 = registerWoodenDrawerBlock(modLoc("pale_oak"), 4, true);
 
     public static final RegistryEntry<BlockFramedStandardDrawers>
         FRAMED_FULL_DRAWERS_1 = registerFramedDrawerBlock("framed_full_drawers_1", 1, false),
@@ -128,7 +134,8 @@ public final class ModBlocks
         CHERRY_TRIM = registerTrimBlock(modLoc("cherry")),
         BAMBOO_TRIM = registerTrimBlock(modLoc("bamboo")),
         CRIMSON_TRIM = registerTrimBlock(modLoc("crimson")),
-        WARPED_TRIM = registerTrimBlock(modLoc("warped"));
+        WARPED_TRIM = registerTrimBlock(modLoc("warped")),
+        PALE_OAK_TRIM = registerTrimBlock(modLoc("pale_oak"));
 
     public static final RegistryEntry<BlockFramedTrim> FRAMED_TRIM = registerFramedTrimBlock("framed_trim");
 

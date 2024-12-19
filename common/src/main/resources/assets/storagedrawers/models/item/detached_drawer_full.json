@@ -1,5 +1,5 @@
 {
-    "parent": "item/generated",
+    "parent": "minecraft:minecraft:item/generated",
     "textures": {
         "layer0": "storagedrawers:item/pulled_drawer"
     }

@@ -11,7 +11,6 @@ import com.texelsaurus.minecraft.chameleon.ChameleonServices;
 import com.texelsaurus.minecraft.chameleon.api.ChameleonInit;
 import com.texelsaurus.minecraft.chameleon.registry.ChameleonRegistry;
 import com.texelsaurus.minecraft.chameleon.registry.RegistryEntry;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

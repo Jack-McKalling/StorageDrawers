@@ -1,0 +1,7 @@
+{
+    "model": {
+        "type": "storagedrawers:framed_block",
+        "model": "storagedrawers:framed_half_drawers_4",
+        "variant": "facing=north"
+    }
+}

@@ -223,7 +223,7 @@ public class CompactingHelper
             return ItemStack.EMPTY;
 
         Ingredient refIngredient = ingredients.getFirst().get();
-        List<Item> refMatchingItems = refIngredient.items().stream().map(Holder::value).toList();
+        List<Item> refMatchingItems = refIngredient.items().map(Holder::value).toList();
         if (refMatchingItems.isEmpty())
             return ItemStack.EMPTY;
 
@@ -233,7 +233,7 @@ public class CompactingHelper
 
             boolean match = false;
             for (var refItem : refMatchingItems) {
-                List<Item> slotItems = ingredients.get(i).get().items().stream().map(Holder::value).toList();
+                List<Item> slotItems = ingredients.get(i).get().items().map(Holder::value).toList();
                 for (var slotItem : slotItems) {
                     if (refItem.equals(slotItem)) {
                         match = true;

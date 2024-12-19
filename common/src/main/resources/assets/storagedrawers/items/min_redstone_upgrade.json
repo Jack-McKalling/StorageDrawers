@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "storagedrawers:item/min_redstone_upgrade"
+    }
+}

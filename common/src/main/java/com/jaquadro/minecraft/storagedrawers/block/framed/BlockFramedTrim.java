@@ -71,8 +71,8 @@ public class BlockFramedTrim extends BlockTrim implements EntityBlock, IFramedBl
     }
 
     @Override
-    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getCloneItemStack(level, pos, state);
+    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
 
         BlockEntityTrim tile = WorldUtils.getBlockEntity(level, pos, BlockEntityTrim.class);
         if (tile != null && !tile.material().isEmpty())

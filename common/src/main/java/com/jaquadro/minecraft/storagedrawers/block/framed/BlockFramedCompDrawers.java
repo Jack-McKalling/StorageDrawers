@@ -49,8 +49,8 @@ public class BlockFramedCompDrawers extends BlockCompDrawers implements IFramedB
     }
 
     @Override
-    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getCloneItemStack(level, pos, state);
+    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
 
         BlockEntityDrawers tile = WorldUtils.getBlockEntity(level, pos, BlockEntityDrawers.class);
         if (tile != null && !tile.material().isEmpty())

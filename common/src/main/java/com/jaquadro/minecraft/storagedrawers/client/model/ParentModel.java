@@ -1,6 +1,5 @@
 package com.jaquadro.minecraft.storagedrawers.client.model;
 
-import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -43,18 +42,8 @@ public class ParentModel implements BakedModel
     }
 
     @Override
-    public boolean isCustomRenderer () {
-        return parent.isCustomRenderer();
-    }
-
-    @Override
     public TextureAtlasSprite getParticleIcon () {
         return parent.getParticleIcon();
-    }
-
-    @Override
-    public BakedOverrides overrides () {
-        return parent.overrides();
     }
 
     @Override

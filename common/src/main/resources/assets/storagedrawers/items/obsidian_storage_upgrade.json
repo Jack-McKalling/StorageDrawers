@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "storagedrawers:item/obsidian_storage_upgrade"
+    }
+}

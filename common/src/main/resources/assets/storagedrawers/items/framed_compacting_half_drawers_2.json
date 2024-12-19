@@ -1,0 +1,7 @@
+{
+    "model": {
+        "type": "storagedrawers:framed_block",
+        "model": "storagedrawers:framed_compacting_half_drawers_2",
+        "variant": "facing=north,slots=open1"
+    }
+}

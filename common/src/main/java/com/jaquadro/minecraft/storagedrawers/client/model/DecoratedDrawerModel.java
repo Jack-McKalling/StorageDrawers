@@ -8,7 +8,6 @@ import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockStandardDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.model.context.DrawerModelContext;
-import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -53,11 +52,6 @@ public abstract class DecoratedDrawerModel implements BakedModel
     }
 
     @Override
-    public boolean isCustomRenderer () {
-        return mainModel.isCustomRenderer();
-    }
-
-    @Override
     public TextureAtlasSprite getParticleIcon () {
         return mainModel.getParticleIcon();
     }
@@ -65,11 +59,6 @@ public abstract class DecoratedDrawerModel implements BakedModel
     @Override
     public ItemTransforms getTransforms () {
         return mainModel.getTransforms();
-    }
-
-    @Override
-    public BakedOverrides overrides () {
-        return mainModel.overrides();
     }
 
     public void emitDecoratedQuads(DrawerModelContext context, Consumer<BakedModel> emitModel) {

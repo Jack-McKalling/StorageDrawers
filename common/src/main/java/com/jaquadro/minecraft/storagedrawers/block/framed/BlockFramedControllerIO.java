@@ -59,8 +59,8 @@ public class BlockFramedControllerIO extends BlockControllerIO implements IFrame
     }
 
     @Override
-    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getCloneItemStack(level, pos, state);
+    public ItemStack getCloneItemStack (LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
 
         BlockEntityControllerIO tile = WorldUtils.getBlockEntity(level, pos, BlockEntityControllerIO.class);
         if (tile != null && !tile.material().isEmpty())

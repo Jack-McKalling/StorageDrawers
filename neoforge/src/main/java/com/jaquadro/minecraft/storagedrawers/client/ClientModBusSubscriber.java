@@ -1,19 +1,10 @@
 package com.jaquadro.minecraft.storagedrawers.client;
 
+import com.jaquadro.minecraft.storagedrawers.ModConstants;
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.DrawerModelProperties;
-import com.jaquadro.minecraft.storagedrawers.block.tile.modelprops.FramedModelProperties;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientDetachedDrawerTooltip;
 import com.jaquadro.minecraft.storagedrawers.client.gui.ClientKeyringTooltip;
-import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelGeometry;
-import com.jaquadro.minecraft.storagedrawers.client.model.DrawerModelStore;
-import com.jaquadro.minecraft.storagedrawers.client.model.ParentModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.PlatformDecoratedModel;
-import com.jaquadro.minecraft.storagedrawers.client.model.context.DrawerModelContext;
-import com.jaquadro.minecraft.storagedrawers.client.model.context.FramedModelContext;
-import com.jaquadro.minecraft.storagedrawers.client.model.decorator.CombinedModelDecorator;
-import com.jaquadro.minecraft.storagedrawers.client.model.decorator.DrawerModelDecorator;
-import com.jaquadro.minecraft.storagedrawers.client.model.decorator.MaterialModelDecorator;
+import com.jaquadro.minecraft.storagedrawers.client.model.*;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityDrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.BlockEntityFramingRenderer;
 import com.jaquadro.minecraft.storagedrawers.core.ModBlockEntities;
@@ -26,10 +17,8 @@ import com.jaquadro.minecraft.storagedrawers.inventory.tooltip.KeyringTooltip;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.MissingBlockModel;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -38,15 +27,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import java.util.List;
 import java.util.function.Function;
 
 @EventBusSubscriber(modid = StorageDrawers.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -90,6 +75,11 @@ public class ClientModBusSubscriber
     }
 
     @SubscribeEvent
+    static void registerItemModels(RegisterItemModelsEvent event) {
+        event.register(ModConstants.loc("framed_block"), PlatformDecoratedModel.PlatformDecoratedItemModel.Unbaked.MAP_CODEC);
+    }
+
+    @SubscribeEvent
     public static void registerModels(ModelEvent.ModifyBakingResult event) {
         if (ModBlocks.OAK_FULL_DRAWERS_1 == null) {
             StorageDrawers.log.warn("Block objects not set in ModelBakeEvent.  Is your mod environment broken?");
@@ -97,21 +87,21 @@ public class ClientModBusSubscriber
         }
 
         DrawerModelStore.getModelLocations().forEach(loc -> {
-            DrawerModelStore.tryAddModel(loc, event.getModels().get(loc));
+            DrawerModelStore.tryAddModel(loc, event.getBakingResult().blockStateModels().get(loc));
         });
 
-        ModBlocks.getFramedDrawers().forEach(blockDrawers -> replaceBlockAndInv(event, blockDrawers, ClientModBusSubscriber::makeFramedStandardDrawerModel));
+        ModBlocks.getFramedDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers, BakedModelProvider::makeFramedStandardDrawerModel));
 
-        replaceBlockAndInv(event, ModBlocks.FRAMED_COMPACTING_DRAWERS_2.get(), ClientModBusSubscriber::makeFramedComp2DrawerModel);
-        replaceBlockAndInv(event, ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_2.get(), ClientModBusSubscriber::makeFramedComp2DrawerModel);
-        replaceBlockAndInv(event, ModBlocks.FRAMED_COMPACTING_DRAWERS_3.get(), ClientModBusSubscriber::makeFramedComp3DrawerModel);
-        replaceBlockAndInv(event, ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_3.get(), ClientModBusSubscriber::makeFramedComp3DrawerModel);
+        replaceBlock(event, ModBlocks.FRAMED_COMPACTING_DRAWERS_2.get(), BakedModelProvider::makeFramedComp2DrawerModel);
+        replaceBlock(event, ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_2.get(), BakedModelProvider::makeFramedComp2DrawerModel);
+        replaceBlock(event, ModBlocks.FRAMED_COMPACTING_DRAWERS_3.get(), BakedModelProvider::makeFramedComp3DrawerModel);
+        replaceBlock(event, ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_3.get(), BakedModelProvider::makeFramedComp3DrawerModel);
 
-        replaceBlockAndInv(event, ModBlocks.FRAMED_TRIM.get(), ClientModBusSubscriber::makeFramedTrimModel);
-        replaceBlockAndInv(event, ModBlocks.FRAMED_CONTROLLER.get(), ClientModBusSubscriber::makeFramedControllerModel);
-        replaceBlockAndInv(event, ModBlocks.FRAMED_CONTROLLER_IO.get(), ClientModBusSubscriber::makeFramedControllerIOModel);
+        replaceBlock(event, ModBlocks.FRAMED_TRIM.get(), BakedModelProvider::makeFramedTrimModel);
+        replaceBlock(event, ModBlocks.FRAMED_CONTROLLER.get(), BakedModelProvider::makeFramedControllerModel);
+        replaceBlock(event, ModBlocks.FRAMED_CONTROLLER_IO.get(), BakedModelProvider::makeFramedControllerIOModel);
 
-        ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers, ClientModBusSubscriber::makeStandardDrawerModel));
+        ModBlocks.getDrawers().forEach(blockDrawers -> replaceBlock(event, blockDrawers, BakedModelProvider::makeStandardDrawerModel));
     }
 
     public static void replaceBlock(ModelEvent.ModifyBakingResult event, Block block, Function<BakedModel, BakedModel> replacer) {
@@ -121,16 +111,9 @@ public class ClientModBusSubscriber
         }
     }
 
-    public static void replaceBlockAndInv(ModelEvent.ModifyBakingResult event, Block block, Function<BakedModel, BakedModel> replacer) {
-        replaceBlock(event, block, replacer);
-
-        ModelResourceLocation invLoc = new ModelResourceLocation(BuiltInRegistries.BLOCK.getKey(block), "inventory");
-        replaceBlock(event, invLoc, replacer);
-    }
-
     private static void replaceBlock (ModelEvent.ModifyBakingResult event, ModelResourceLocation modelResource, Function<BakedModel, BakedModel> replacer) {
-        BakedModel missing = event.getModels().get(MissingBlockModel.VARIANT);
-        BakedModel parentModel = event.getModels().get(modelResource);
+        BakedModel missing = event.getBakingResult().blockStateModels().get(MissingBlockModel.VARIANT);
+        BakedModel parentModel = event.getBakingResult().blockStateModels().get(modelResource);
         if (parentModel == null) {
             StorageDrawers.log.warn("Got back null model from ModelBakeEvent.ModelManager for resource " + modelResource.toString());
             return;
@@ -141,58 +124,9 @@ public class ClientModBusSubscriber
             return;
 
         if (DrawerModelStore.INSTANCE.isTargetedModel(modelResource)) {
-            event.getModels().put(modelResource, replacer.apply(parentModel));
+            BakedModel model = replacer.apply(parentModel);
+            ItemModelStore.models.put(modelResource, model);
+            event.getBakingResult().blockStateModels().put(modelResource, model);
         }
-    }
-
-    static BakedModel makeStandardDrawerModel(BakedModel parentModel) {
-        DrawerModelDecorator decorator = new DrawerModelDecorator(DrawerModelStore.INSTANCE);
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedDrawerModel (BakedModel parentModel, DrawerModelStore.FrameMatSet matSet) {
-        CombinedModelDecorator<DrawerModelContext> decorator = new CombinedModelDecorator<>();
-        decorator.add(new DrawerModelDecorator(DrawerModelStore.INSTANCE));
-        decorator.add(new MaterialModelDecorator.FacingSizedSlotted<>(matSet, true));
-
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedStandardDrawerModel(BakedModel parentModel) {
-        return makeFramedDrawerModel(parentModel, DrawerModelStore.FramedStandardDrawerMaterials);
-    }
-
-    static BakedModel makeFramedCompDrawerModel (BakedModel parentModel, DrawerModelStore.FrameMatSet matSet) {
-        CombinedModelDecorator<DrawerModelContext> decorator = new CombinedModelDecorator<>();
-        decorator.add(new DrawerModelDecorator(DrawerModelStore.INSTANCE));
-        decorator.add(new MaterialModelDecorator.FacingSizedOpen<>(matSet, true));
-
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedComp2DrawerModel(BakedModel parentModel) {
-        return makeFramedCompDrawerModel(parentModel, DrawerModelStore.FramedComp2DrawerMaterials);
-    }
-
-    static BakedModel makeFramedComp3DrawerModel(BakedModel parentModel) {
-        return makeFramedCompDrawerModel(parentModel, DrawerModelStore.FramedComp3DrawerMaterials);
-    }
-
-    static BakedModel makeFramedTrimModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Single<>(DrawerModelStore.FramedTrimMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedControllerModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Facing<>(DrawerModelStore.FramedControllerMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedControllerIOModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Single<>(DrawerModelStore.FramedControllerIOMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
     }
 }

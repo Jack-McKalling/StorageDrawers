@@ -19,6 +19,9 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -44,6 +47,7 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
     private final ItemStack[] renderStacks = new ItemStack[4];
 
     private ItemRenderer itemRenderer;
+    private ItemStackRenderState itemRenderState = new ItemStackRenderState();
 
     private final BlockEntityRendererProvider.Context context;
 
@@ -200,18 +204,23 @@ public class BlockEntityDrawersRenderer implements BlockEntityRenderer<BlockEnti
         matrix.mulPose((new Matrix4f()).scale(scaleX, scaleY, 0.001f));
 
         try {
-            BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
+            context.getItemModelResolver().updateForTopItem(
+                this.itemRenderState, itemStack, ItemDisplayContext.GUI, false, context.getBlockEntityRenderDispatcher().level, null, 0
+            );
 
-            if (itemModel.isGui3d())
+            //BakedModel itemModel = itemRenderer.getModel(itemStack, null, null, 0);
+
+            //if (itemModel.isGui3d())
                 matrix.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-            else
-                matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+            //else
+            //    matrix.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
 
-            ItemDisplayContext context = ItemDisplayContext.GUI;
-            if (itemModel.isCustomRenderer())
-                context = ItemDisplayContext.FIXED;
+            //ItemDisplayContext context = ItemDisplayContext.GUI;
+            //if (itemModel instanceof SpecialModelRenderer)
+            //    context = ItemDisplayContext.FIXED;
 
-            itemRenderer.render(itemStack, context, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            //itemRenderer.renderItem(itemStack, context, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            this.itemRenderState.render(matrix, buffer, combinedLight, combinedOverlay);
         } catch (Exception e) {
             // Shrug
         }

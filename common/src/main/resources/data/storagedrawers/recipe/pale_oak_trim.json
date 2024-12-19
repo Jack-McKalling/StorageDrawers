@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "X/X",
+        "/X/",
+        "X/X"
+    ],
+    "key": {
+        "/": "#c:rods/wooden",
+        "X": "minecraft:pale_oak_planks"
+    },
+    "result": { "id": "storagedrawers:pale_oak_trim", "count": 4 }
+}

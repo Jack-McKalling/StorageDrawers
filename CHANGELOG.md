@@ -1,3 +1,7 @@
+[15.0.0]
+- Ported to Minecraft 1.21.4
+- Added pale oak wood variants
+
 [14.0.4]
 - Change debugTrace config item default value back to false
   - If your value was already written as true, you will need to change this yourself

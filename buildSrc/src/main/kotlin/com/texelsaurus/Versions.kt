@@ -6,7 +6,7 @@ object Versions {
     const val minecraft = "1.21.4"
     const val minecraftRange = "[1.21.4,1.21.5)"
     const val minecraftUpper = "1.21.5"
-    const val forge = "54.0.6"
+    const val forge = "54.0.10"
     const val forgeVersionRange = "[54,)"
     const val forgeLoaderRange = "[54,)"
     const val neoForge = "21.4.0-beta"

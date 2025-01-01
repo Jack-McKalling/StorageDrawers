@@ -12,108 +12,105 @@ import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
+import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(EnvType.CLIENT)
 public class ModelLoadPlugin implements ModelLoadingPlugin
 {
+    public class UnbakedProxyModel implements UnbakedBlockStateModel {
+
+        UnbakedBlockStateModel parent;
+        ModelResourceLocation modelLoc;
+
+        public UnbakedProxyModel(UnbakedBlockStateModel parent, ModelResourceLocation modelLoc) {
+            this.parent = parent;
+            this.modelLoc = modelLoc;
+        }
+
+        @Override
+        public BakedModel bake (ModelBaker modelBaker) {
+            BakedModel original = parent.bake(modelBaker);
+
+            ResourceLocation blockId = modelLoc.id();
+            DrawerModelStore.tryAddModel(modelLoc, original);
+            if (!DrawerModelStore.INSTANCE.isTargetedModel(modelLoc))
+                return original;
+
+            BakedModel proxyModel;
+
+            if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_1.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_2.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_4.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_1.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_2.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_4.getId()))
+                proxyModel = BakedModelProvider.makeFramedStandardDrawerModel(original);
+
+            else if (blockId.equals(ModBlocks.FRAMED_COMPACTING_DRAWERS_2.getId()))
+                proxyModel = BakedModelProvider.makeFramedComp2DrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_2.getId()))
+                proxyModel = BakedModelProvider.makeFramedComp2DrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_COMPACTING_DRAWERS_3.getId()))
+                proxyModel = BakedModelProvider.makeFramedComp3DrawerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_3.getId()))
+                proxyModel = BakedModelProvider.makeFramedComp3DrawerModel(original);
+
+            else if (blockId.equals(ModBlocks.FRAMED_TRIM.getId()))
+                proxyModel = BakedModelProvider.makeFramedTrimModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_CONTROLLER.getId()))
+                proxyModel = BakedModelProvider.makeFramedControllerModel(original);
+            else if (blockId.equals(ModBlocks.FRAMED_CONTROLLER_IO.getId()))
+                proxyModel = BakedModelProvider.makeFramedControllerIOModel(original);
+
+            else
+                proxyModel = BakedModelProvider.makeStandardDrawerModel(original);
+
+            ItemModelStore.models.put(modelLoc, proxyModel);
+
+            return proxyModel;
+        }
+
+        @Override
+        public Object visualEqualityGroup (BlockState blockState) {
+            return parent.visualEqualityGroup(blockState);
+        }
+
+        @Override
+        public void resolveDependencies (Resolver resolver) {
+            parent.resolveDependencies(resolver);
+        }
+    }
+
     @Override
     public void initialize (Context pluginContext) {
         DrawerModelGeometry.loadGeometryData();
-        pluginContext.modifyModelAfterBake().register((original, context) -> {
-            if (context.topLevelId() == null)
+        pluginContext.modifyBlockModelOnLoad().register((original, context) -> {
+            if (context.id() == null)
                 return original;
 
-            ResourceLocation blockId = context.topLevelId().id();
+            ResourceLocation blockId = context.id().id();
             if (!blockId.getNamespace().equals(ModConstants.MOD_ID))
                 return original;
 
-            DrawerModelStore.tryAddModel(context.topLevelId(), original);
-            if (!DrawerModelStore.INSTANCE.isTargetedModel(context.topLevelId()))
+            if (original instanceof UnbakedProxyModel)
                 return original;
 
-            if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_1.getId()))
-                return makeFramedStandardDrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_2.getId()))
-                return makeFramedStandardDrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_FULL_DRAWERS_4.getId()))
-                return makeFramedStandardDrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_1.getId()))
-                return makeFramedStandardDrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_2.getId()))
-                return makeFramedStandardDrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_HALF_DRAWERS_4.getId()))
-                return makeFramedStandardDrawerModel(original);
-
-            if (blockId.equals(ModBlocks.FRAMED_COMPACTING_DRAWERS_2.getId()))
-                return makeFramedComp2DrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_2.getId()))
-                return makeFramedComp2DrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_COMPACTING_DRAWERS_3.getId()))
-                return makeFramedComp3DrawerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_COMPACTING_HALF_DRAWERS_3.getId()))
-                return makeFramedComp3DrawerModel(original);
-
-            if (blockId.equals(ModBlocks.FRAMED_TRIM.getId()))
-                return makeFramedTrimModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_CONTROLLER.getId()))
-                return makeFramedControllerModel(original);
-            if (blockId.equals(ModBlocks.FRAMED_CONTROLLER_IO.getId()))
-                return makeFramedControllerIOModel(original);
-
-            return makeStandardDrawerModel(original);
+            return new UnbakedProxyModel(original, context.id());
         });
-    }
 
-    static BakedModel makeStandardDrawerModel(BakedModel parentModel) {
-        DrawerModelDecorator decorator = new DrawerModelDecorator(DrawerModelStore.INSTANCE);
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedDrawerModel (BakedModel parentModel, DrawerModelStore.FrameMatSet matSet) {
-        CombinedModelDecorator<DrawerModelContext> decorator = new CombinedModelDecorator<>();
-        decorator.add(new DrawerModelDecorator(DrawerModelStore.INSTANCE));
-        decorator.add(new MaterialModelDecorator.FacingSizedSlotted<>(matSet, true));
-
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedStandardDrawerModel(BakedModel parentModel) {
-        return makeFramedDrawerModel(parentModel, DrawerModelStore.FramedStandardDrawerMaterials);
-    }
-
-    static BakedModel makeFramedCompDrawerModel (BakedModel parentModel, DrawerModelStore.FrameMatSet matSet) {
-        CombinedModelDecorator<DrawerModelContext> decorator = new CombinedModelDecorator<>();
-        decorator.add(new DrawerModelDecorator(DrawerModelStore.INSTANCE));
-        decorator.add(new MaterialModelDecorator.FacingSizedOpen<>(matSet, true));
-
-        return new PlatformDecoratedModel<>(parentModel, decorator, DrawerModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedComp2DrawerModel(BakedModel parentModel) {
-        return makeFramedCompDrawerModel(parentModel, DrawerModelStore.FramedComp2DrawerMaterials);
-    }
-
-    static BakedModel makeFramedComp3DrawerModel(BakedModel parentModel) {
-        return makeFramedCompDrawerModel(parentModel, DrawerModelStore.FramedComp3DrawerMaterials);
-    }
-
-    static BakedModel makeFramedTrimModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Single<>(DrawerModelStore.FramedTrimMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedControllerModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Facing<>(DrawerModelStore.FramedControllerMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
-    }
-
-    static BakedModel makeFramedControllerIOModel(BakedModel parentModel) {
-        MaterialModelDecorator<FramedModelContext> decorator =
-            new MaterialModelDecorator.Single<>(DrawerModelStore.FramedControllerIOMaterials, true);
-        return new PlatformDecoratedModel<>(parentModel, decorator, FramedModelProperties.INSTANCE);
+        ItemModels.ID_MAPPER.put(
+            ModConstants.loc("framed_block"), PlatformDecoratedModel.PlatformDecoratedItemModel.Unbaked.MAP_CODEC
+        );
     }
 }

@@ -1,3 +1,7 @@
+[15.0.1]
+- Fixed framed item rendering issue
+- NEOFORGE: Fixed crash from item rendering issue
+
 [15.0.0]
 - Ported to Minecraft 1.21.4
 - Added pale oak wood variants
